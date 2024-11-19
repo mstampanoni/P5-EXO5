@@ -409,6 +409,15 @@ namespace RPGCharacterAnims
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LookAt"",
+                    ""type"": ""Value"",
+                    ""id"": ""e09a454c-ca83-41fd-945a-af17f19e22d5"",
+                    ""expectedControlType"": ""Delta"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -514,7 +523,7 @@ namespace RPGCharacterAnims
                 {
                     ""name"": """",
                     ""id"": ""6ba25e31-5acd-4e3f-b224-fd58ddebcf4e"",
-                    ""path"": ""<Mouse>/rightButton"",
+                    ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Mouse and Keyboard"",
@@ -530,6 +539,17 @@ namespace RPGCharacterAnims
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""eb8af72c-6ae2-4f54-8d13-cd724c66da3b"",
+                    ""path"": ""<Pointer>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LookAt"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -581,6 +601,7 @@ namespace RPGCharacterAnims
             m_PlayerInput_Move = m_PlayerInput.FindAction("Move", throwIfNotFound: true);
             m_PlayerInput_Sprint = m_PlayerInput.FindAction("Sprint", throwIfNotFound: true);
             m_PlayerInput_Attack = m_PlayerInput.FindAction("Attack", throwIfNotFound: true);
+            m_PlayerInput_LookAt = m_PlayerInput.FindAction("LookAt", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -788,6 +809,7 @@ namespace RPGCharacterAnims
         private readonly InputAction m_PlayerInput_Move;
         private readonly InputAction m_PlayerInput_Sprint;
         private readonly InputAction m_PlayerInput_Attack;
+        private readonly InputAction m_PlayerInput_LookAt;
         public struct PlayerInputActions
         {
             private @RPGInputs m_Wrapper;
@@ -796,6 +818,7 @@ namespace RPGCharacterAnims
             public InputAction @Move => m_Wrapper.m_PlayerInput_Move;
             public InputAction @Sprint => m_Wrapper.m_PlayerInput_Sprint;
             public InputAction @Attack => m_Wrapper.m_PlayerInput_Attack;
+            public InputAction @LookAt => m_Wrapper.m_PlayerInput_LookAt;
             public InputActionMap Get() { return m_Wrapper.m_PlayerInput; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -817,6 +840,9 @@ namespace RPGCharacterAnims
                 @Attack.started += instance.OnAttack;
                 @Attack.performed += instance.OnAttack;
                 @Attack.canceled += instance.OnAttack;
+                @LookAt.started += instance.OnLookAt;
+                @LookAt.performed += instance.OnLookAt;
+                @LookAt.canceled += instance.OnLookAt;
             }
 
             private void UnregisterCallbacks(IPlayerInputActions instance)
@@ -833,6 +859,9 @@ namespace RPGCharacterAnims
                 @Attack.started -= instance.OnAttack;
                 @Attack.performed -= instance.OnAttack;
                 @Attack.canceled -= instance.OnAttack;
+                @LookAt.started -= instance.OnLookAt;
+                @LookAt.performed -= instance.OnLookAt;
+                @LookAt.canceled -= instance.OnLookAt;
             }
 
             public void RemoveCallbacks(IPlayerInputActions instance)
@@ -890,6 +919,7 @@ namespace RPGCharacterAnims
             void OnMove(InputAction.CallbackContext context);
             void OnSprint(InputAction.CallbackContext context);
             void OnAttack(InputAction.CallbackContext context);
+            void OnLookAt(InputAction.CallbackContext context);
         }
     }
 }

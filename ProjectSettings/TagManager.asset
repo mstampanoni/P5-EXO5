@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Collide
   - Ground
+  - FxTemporaire
+  - Sword
   layers:
   - Default
   - TransparentFX

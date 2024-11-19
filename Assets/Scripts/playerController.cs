@@ -39,7 +39,10 @@ public class PlayerController : MonoBehaviour
         Collider[] childColliders = GetComponentsInChildren<Collider>();
         foreach (Collider collider in childColliders)
         {
-            collider.gameObject.tag = "Player";
+            if (collider.tag == "Untagged")
+            {
+                collider.gameObject.tag = "Player";
+            }
         }
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -108,15 +111,13 @@ public class PlayerController : MonoBehaviour
 
     public void OnAim(InputAction.CallbackContext context)
     {
-        if (context.started)
+    }
+
+    public void OnAttack(InputAction.CallbackContext context)
+    {
+        if(context.performed)
         {
-            animator.SetBool("Aiming", true);
-            playerCamera.fieldOfView = aimFOV;
-        }
-        else if (context.canceled)
-        {
-            animator.SetBool("Aiming", false);
-            playerCamera.fieldOfView = normalFOV;
+            animator.Play("Attack" , -1 , 0f);
         }
     }
 
