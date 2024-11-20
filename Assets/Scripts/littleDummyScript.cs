@@ -8,7 +8,7 @@ public class littleDummyScript : MonoBehaviour
     public Animator animator;
     public int health = 100;
     public int damage = 25;
-    private bool isDead = false;
+    public bool isDead = false;
     private Rigidbody rb;
     public ParticleSystem hitParticles;
     public Material dummyMaterial; 
@@ -17,6 +17,7 @@ public class littleDummyScript : MonoBehaviour
     private float force = 0.7f;
     public CinemachineImpulseSource thisImpulse;
 
+    public Material swordMaterial;
 
     void Start()
     {
@@ -29,6 +30,11 @@ public class littleDummyScript : MonoBehaviour
         {
             if (contact.otherCollider.CompareTag("Sword") && !isDead)
             {
+                if (swordMaterial != null)
+                {
+                    swordMaterial.SetFloat(effectProperty, 1.0f); // Active l'effet pour l'épée
+                }
+
                 TakeDamage(damage);
                 break;
             }
@@ -53,7 +59,7 @@ public class littleDummyScript : MonoBehaviour
 
         if (dummyMaterial != null)
         {
-            dummyMaterial.SetFloat(effectProperty, 1.0f);
+            dummyMaterial.SetFloat(effectProperty, 0.5f);
         }
 
         if (health <= 0)
@@ -80,11 +86,14 @@ public class littleDummyScript : MonoBehaviour
     {
         animator.Play("died", -1, 0f);
         yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+        if (swordMaterial != null)
+        {
+            swordMaterial.SetFloat(effectProperty, 0.0f);
+        }
         if (dummyMaterial != null)
         {
             dummyMaterial.SetFloat(effectProperty, 0.0f);
         }
-        Destroy(gameObject);
     }
 
     IEnumerator EndAnimation()
@@ -92,9 +101,16 @@ public class littleDummyScript : MonoBehaviour
         animator.SetBool("hit", true);
         yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
         animator.SetBool("hit", false);
+
         if (dummyMaterial != null)
         {
             dummyMaterial.SetFloat(effectProperty, 0.0f);
         }
+
+        if (swordMaterial != null)
+        {
+            swordMaterial.SetFloat(effectProperty, 0.0f); 
+        }
     }
+
 }
